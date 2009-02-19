@@ -1,0 +1,16 @@
+DEPOT
+
+An IMAP server in Java.
+
+    Issues and Tasks: http://blogometer.com/trac/incubator
+    Source: http://github.com/bigeasy/depot/tree/master
+    Contact: alan@blogometer.com
+
+PURPOSE
+
+Depot is an IMAP server that pipes its messages through Java mail filters. It is
+a framework for creating mail applications in Java.
+
+MOTIVATION
+
+Could not find a lightweight Java implementation of the mail protocols.
