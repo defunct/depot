@@ -6,6 +6,6 @@ public class Noop extends Command
     public Interpreter execute(String code, String parameters, DepotSession session, Response response)
     {
         response.ok(code, "completed");
-        return new CommandInterpreter();
+        return session.newCommandInterpreter();
     }
 }

@@ -15,4 +15,10 @@ public class Terminate extends Interpreter
     {
         response.sendLine("* BYE Shutting down");
     }
+    
+    @Override
+    public Interpreter nextInterpreter()
+    {   
+        return new Interpreter();
+    }
 }

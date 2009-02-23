@@ -1,11 +1,10 @@
 package com.goodworkalan.depot;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.goodworkalan.manifold.Sender;
 import com.goodworkalan.manifold.Session;
+
 
 public class DepotSession implements Session
 {
@@ -15,16 +14,17 @@ public class DepotSession implements Session
     
     private String authorizationId;
     
-    private DataWrapper dataWrapper = new DataWrapper(); 
+    private CommandInterpreterFactory commandInterpreterFactory;
     
-    public DepotSession(Authenticator authenticator)
+    public DepotSession(CommandInterpreterFactory commandInterpreterFactory, Authenticator authenticator)
     {
+        this.commandInterpreterFactory = commandInterpreterFactory;
         this.authenticator = authenticator;
     }
     
-    public void setDataWrapper(DataWrapper dataWrapper)
+    public Interpreter newCommandInterpreter()
     {
-        this.dataWrapper = dataWrapper;
+        return commandInterpreterFactory.newCommandInterperter();
     }
     
     public void setAuthorizationId(String authorizationId)
@@ -50,8 +50,7 @@ public class DepotSession implements Session
     
     public void read(ByteBuffer data, Sender sender)
     {
-        List<ByteBuffer> out = new ArrayList<ByteBuffer>();
-        Response response = new Response(out);
+        Response response = new Response(sender);
         try
         {
             while (interpreter.read(data))
@@ -59,28 +58,11 @@ public class DepotSession implements Session
                 interpreter.execute(this, response);
                 interpreter = interpreter.nextInterpreter();
             }
-            if (!out.isEmpty())
-            {
-                List<ByteBuffer> secure = new ArrayList<ByteBuffer>();
-                for (ByteBuffer unwrapped : out)
-                {
-                    ByteBuffer wrapped = dataWrapper.wrap(unwrapped);
-                    if (wrapped == null)
-                    {
-                        sender.close();
-                    }
-                    secure.add(wrapped);
-                }
-                sender.send(secure);
-            }
-            if (response.isClosed())
-            {
-                sender.close();
-            }
         }
         catch (Bad bad)
         {
             response.send(bad.getMessage());
+            interpreter = newCommandInterpreter();
         }
     }
     

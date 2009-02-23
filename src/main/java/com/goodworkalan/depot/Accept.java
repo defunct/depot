@@ -15,5 +15,6 @@ public class Accept extends Interpreter
     public void execute(DepotSession session, Response response)
     {
         response.sendLine("* OK IMAP4rev1 server ready");
+        setNextInterpreter(session.newCommandInterpreter());
     }
 }

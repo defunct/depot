@@ -2,17 +2,17 @@ package com.goodworkalan.depot;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.util.List;
+
+import com.goodworkalan.manifold.Sender;
+import com.goodworkalan.manifold.Wrapper;
 
 public class Response
 {
-    private final List<ByteBuffer> out;
+    private final Sender sender;
     
-    private boolean closed;
-    
-    public Response(List<ByteBuffer> out)
+    public Response(Sender sender)
     {
-        this.out = out;
+        this.sender = sender;
     }
     
     public void sendLine(String line)
@@ -22,12 +22,12 @@ public class Response
     
     public void send(String data)
     {
-        out.add(Charset.forName("UTF-8").encode(data));
+        sender.send(Charset.forName("UTF-8").encode(data));
     }
 
     public void send(ByteBuffer data)
     {
-        out.add(data);
+        sender.send(data);
     }
     
     public void send(byte[] data)
@@ -50,13 +50,13 @@ public class Response
         sendLine(code + " BAD " + message);
     }
     
+    public void setWrapper(Wrapper wrapper)
+    {
+        sender.setWrapper(wrapper);
+    }
+    
     public void close()
     {
-        closed = true;
-    }
-
-    public boolean isClosed()
-    {
-        return closed;
+        sender.close();
     }
 }

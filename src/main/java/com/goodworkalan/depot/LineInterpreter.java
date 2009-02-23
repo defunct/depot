@@ -8,8 +8,6 @@ public abstract class LineInterpreter extends Interpreter
     
     private final StringBuilder newString = new StringBuilder();
     
-    private Interpreter nextInterpreter = this;
-    
     private String line;
     
     @Override
@@ -42,16 +40,5 @@ public abstract class LineInterpreter extends Interpreter
     protected String getLine()
     {
         return line;
-    }
-    
-    protected void setNextInterpreter(Interpreter nextInterpreter)
-    {
-        this.nextInterpreter = nextInterpreter;
-    }
-    
-    @Override
-    public Interpreter nextInterpreter()
-    {
-        return nextInterpreter;
     }
 }

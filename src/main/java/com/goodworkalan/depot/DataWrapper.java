@@ -4,13 +4,13 @@ import java.nio.ByteBuffer;
 
 public class DataWrapper
 {
-    public ByteBuffer wrap(ByteBuffer unwrapped)
+    public ByteBuffer[] wrap(ByteBuffer unwrapped)
     {
-        return unwrapped;
+        return new ByteBuffer[] { unwrapped };
     }
     
-    public ByteBuffer unwrap(ByteBuffer wrapped)
+    public ByteBuffer[] unwrap(ByteBuffer wrapped)
     {
-        return wrapped;
+        return new ByteBuffer[] { wrapped };
     }
 }

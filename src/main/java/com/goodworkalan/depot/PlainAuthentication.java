@@ -9,18 +9,10 @@ import java.util.List;
 public class PlainAuthentication extends LineInterpreter
 {
     private final String code;
-    
-    private final String begin;
 
-    public PlainAuthentication(String code, String contents)
+    public PlainAuthentication(String code)
     {
         this.code = code;
-        this.begin = "+ \r\n";
-    }
-    
-    public String begin()
-    {
-        return begin;
     }
     
     /**
@@ -65,5 +57,6 @@ public class PlainAuthentication extends LineInterpreter
         {
             response.no(code, "Invalid credentials");
         }
+        setNextInterpreter(session.newCommandInterpreter());
     }
 }

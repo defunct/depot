@@ -35,14 +35,14 @@ public class SaslAuthentication extends LineInterpreter
                 boolean hasSecurityLayer = (qop != null &&  (qop.equals("auth-int") || qop.equals("auth-conf")));
                 if (hasSecurityLayer)
                 {
-                    session.setDataWrapper(new SaslWrapper(saslServer));
+//                    session.setDataWrapper(new SaslWrapper(saslServer));
                 }
                 else
                 {
                     saslServer.dispose();
                 }
                 response.ok(code, auth + " authentication successful");
-                setNextInterpreter(new CommandInterpreter());
+                setNextInterpreter(session.newCommandInterpreter());
             }
             else
             {
@@ -59,7 +59,7 @@ public class SaslAuthentication extends LineInterpreter
             {
             }
             response.no(code, "Invalid credentials");
-            setNextInterpreter(new CommandInterpreter());
+            setNextInterpreter(session.newCommandInterpreter());
         }
     }
 }

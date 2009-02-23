@@ -7,8 +7,15 @@ import com.goodworkalan.manifold.SessionFactory;
 
 public class DepotSessionFactory implements SessionFactory
 {
+    private CommandInterpreterFactory commandInterpreterFactory;
+    
+    public DepotSessionFactory(CommandInterpreterFactory commandInterpreterFactory)
+    {
+        this.commandInterpreterFactory = commandInterpreterFactory;
+    }
+
     public Session accept(InetAddress remote)
     {
-        return new DepotSession(new Authenticator());
+        return new DepotSession(commandInterpreterFactory, new Authenticator());
     }
 }

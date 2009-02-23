@@ -8,6 +8,6 @@ public class Logout extends Command
         response.sendLine("* BYE IMAP4rev1 Server logging out");
         response.ok(code, " LOGOUT Completed");
         response.close();
-        return new CommandInterpreter();
+        return session.newCommandInterpreter();
     }
 }

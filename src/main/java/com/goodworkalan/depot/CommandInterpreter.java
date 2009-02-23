@@ -1,6 +1,5 @@
 package com.goodworkalan.depot;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,21 +8,13 @@ public class CommandInterpreter extends LineInterpreter
 {
     private final static Pattern isCommand = Pattern.compile("([^ )({%*\"\\\\\\]]+)\\s+(\\w+)(.*)$");
     
-    private final static Map<String, Command> commands = new HashMap<String, Command>();
+    private final Map<String, Command> commands;
     
     private CommandExecutor commandExecutor;
-    
-    static
-    {
-        commands.put("CAPABILITY", new Capability());
-        commands.put("AUTHENTICATE", new Authenticate());
-        commands.put("NOOP", new Noop());
-        commands.put("LOGOUT", new Logout());
-    }
-    
-    public void read(String data) throws Bad
-    {
 
+    public CommandInterpreter(Map<String, Command> commands)
+    {
+        this.commands = commands;
     }
     
     @Override
