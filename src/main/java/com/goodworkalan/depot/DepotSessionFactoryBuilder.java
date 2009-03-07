@@ -88,6 +88,7 @@ public class DepotSessionFactoryBuilder
         commands.put("NOOP", new Noop());
         commands.put("LOGOUT", new Logout());
         commands.put("STARTTLS", new StartTLS(sslContext));
+        commands.put("LIST", new List());
         
         return new DepotSessionFactory(new CommandInterpreterFactory(commands));
     }

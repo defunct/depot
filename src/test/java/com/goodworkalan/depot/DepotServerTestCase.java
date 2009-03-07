@@ -1,12 +1,13 @@
 package com.goodworkalan.depot;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.Properties;
 import java.util.concurrent.Executors;
 
+import javax.mail.Folder;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.net.ssl.KeyManagerFactory;
@@ -19,6 +20,18 @@ import com.goodworkalan.manifold.Manifold;
 // TODO Move to different package for black box testing.
 public class DepotServerTestCase
 {
+    private void list(Folder parent) throws MessagingException
+    {
+        for (Folder folder : parent.list())
+        {
+            if ((folder.getType() & Folder.HOLDS_FOLDERS) == Folder.HOLDS_FOLDERS)
+            {
+                System.out.println(folder.getFullName());
+                list(folder);
+            }
+        }
+    }
+
     @Test
     public void send() throws Exception
     {
@@ -39,25 +52,9 @@ public class DepotServerTestCase
         DepotSessionFactoryBuilder newDepotSessionFactory = new DepotSessionFactoryBuilder();
         newDepotSessionFactory.setSslContext(sslContext);
         
-        final Manifold manifold = new Manifold(newDepotSessionFactory.newDepotSessionFactory(), Executors.newCachedThreadPool());
-        
-        Thread thread = new Thread()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    manifold.bind();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
-        
+        Manifold manifold = new Manifold(newDepotSessionFactory.newDepotSessionFactory(), Executors.newCachedThreadPool());
+
+        manifold.start();
         manifold.waitForStartup();
         
         Properties props = new Properties();
@@ -67,6 +64,11 @@ public class DepotServerTestCase
         session.setDebug(true);
         Store store = session.getStore("imap");
         store.connect("localhost", "alan", "password");
+        Folder defaultFolder = store.getDefaultFolder();
+        list(defaultFolder);
+        System.out.println(defaultFolder.getSeparator());
+       
+        System.out.println(defaultFolder.getFullName());
         if (store.isConnected())
         {
             store.close();
@@ -90,7 +92,7 @@ public class DepotServerTestCase
         store = session.getStore("imap");
         store.connect("localhost", "alan", "password");
         manifold.shutdown();
-        thread.join();
+        manifold.join();
         if (!store.isConnected())
         {
             System.out.println("As expected.");

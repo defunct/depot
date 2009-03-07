@@ -35,6 +35,6 @@ public class Depot
         DepotSessionFactoryBuilder newDepotSessionFactory = new DepotSessionFactoryBuilder();
         newDepotSessionFactory.setSslContext(sslContext);
         
-        new Manifold(newDepotSessionFactory.newDepotSessionFactory(), Executors.newCachedThreadPool()).bind();
+        new Manifold(newDepotSessionFactory.newDepotSessionFactory(), Executors.newCachedThreadPool()).start();
     }
 }
