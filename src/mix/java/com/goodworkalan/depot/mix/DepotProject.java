@@ -13,6 +13,7 @@ public class DepotProject extends ProjectModule {
                 .produces(new Artifact("com.goodworkalan/depot/0.1"))
                 .main()
                     .depends()
+                        .artifact(new Artifact("javax.mail/mail/1.4"))
                         .artifact(new Artifact("com.goodworkalan/manifold/0.1"))
                         .end()
                     .end()

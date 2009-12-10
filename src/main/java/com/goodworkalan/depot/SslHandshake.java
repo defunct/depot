@@ -1,15 +1,19 @@
 package com.goodworkalan.depot;
 
+import static javax.net.ssl.SSLEngineResult.HandshakeStatus.FINISHED;
+import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NEED_TASK;
+import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NEED_UNWRAP;
+import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NEED_WRAP;
+import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NOT_HANDSHAKING;
+import static javax.net.ssl.SSLEngineResult.Status.BUFFER_UNDERFLOW;
+import static javax.net.ssl.SSLEngineResult.Status.OK;
+
 import java.nio.ByteBuffer;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLEngineResult;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
-import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NEED_UNWRAP;
-import static javax.net.ssl.SSLEngineResult.HandshakeStatus.NEED_WRAP;
-import static javax.net.ssl.SSLEngineResult.HandshakeStatus.*;
-import static javax.net.ssl.SSLEngineResult.Status.*;
 
 /**
  * Implements an initial SSL handshake for the StartTLS command.
@@ -21,6 +25,8 @@ import static javax.net.ssl.SSLEngineResult.Status.*;
  * <p>
  * In order to run the initial handshake, you seed to wrap and unwrap empty
  * buffers, exchange empty buffers with the client.
+ * <p>
+ * FIXME Keeping this around for posterity. Delete when you get a chance.
  */
 class SslHandshake extends Interpreter
 {
@@ -189,7 +195,10 @@ class SslHandshake extends Interpreter
                         response.ok(code, "Begin TLS negotiation now");
                         break;
                     case FINISHED:
-                        session.setDataWrapper(new SslWrapper(sslEngine));
+                        /*
+                         * PROBLMES HERE DEAD CODE.
+                         */
+//                        session.setDataWrapper(new SslWrapper(sslEngine));
                         setNextInterpreter(session.newCommandInterpreter());
                         break;
                     case NEED_TASK:
