@@ -1,27 +1,30 @@
 package com.goodworkalan.strata.mix;
 
-import com.goodworkalan.go.go.Artifact;
 import com.goodworkalan.mix.ProjectModule;
 import com.goodworkalan.mix.builder.Builder;
 import com.goodworkalan.mix.builder.JavaProject;
 
-public class DepotProject extends ProjectModule {
-    @Override
+/**
+ * Builds the project definition for Depot.
+ *
+ * @author Alan Gutierrez
+ */
+public class DepotProject implements ProjectModule {
+    /**
+     * Build the project definition for Depot.
+     *
+     * @param builder
+     *          The project builder.
+     */
     public void build(Builder builder) {
         builder
             .cookbook(JavaProject.class)
-                .produces(new Artifact("com.goodworkalan/depot/0.1"))
-                .main()
-                    .depends()
-                        .artifact(new Artifact("javax.mail/mail/1.4"))
-                        .artifact(new Artifact("com.goodworkalan/manifold/0.1"))
-                        .end()
-                    .end()
-                .test()
-                    .depends()
-                        .artifact(new Artifact("org.testng/testng/5.10/jdk15"))
-                        .artifact(new Artifact("org.mockito/mockito-core/1.6"))
-                        .end()
+                .produces("com.goodworkalan/depot/0.1")
+                .depends()
+                    .production("javax.mail/mail/1.4")
+                    .production("com.goodworkalan/manifold/0.1")
+                    .development("org.testng/testng-jdk15/5.10")
+                    .development("org.mockito/mockito-core/1.6")
                     .end()
                 .end()
             .end();
