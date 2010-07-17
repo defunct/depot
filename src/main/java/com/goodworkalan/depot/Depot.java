@@ -16,10 +16,8 @@ import javax.net.ssl.SSLContext;
 
 import com.goodworkalan.manifold.Manifold;
 
-public class Depot
-{
-    public static void main(String[] args) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, KeyManagementException, UnrecoverableKeyException
-    {
+public class Depot {
+    public static void main(String[] args) throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException, KeyManagementException, UnrecoverableKeyException {
         KeyStore ks = KeyStore.getInstance("JKS");
 
         char[] passphrase = "password".toCharArray();

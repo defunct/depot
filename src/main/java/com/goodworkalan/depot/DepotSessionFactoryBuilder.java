@@ -10,77 +10,62 @@ import java.util.TreeSet;
 
 import javax.net.ssl.SSLContext;
 
-public class DepotSessionFactoryBuilder
-{
-    private final static String[] CAPABILITIES = new String[]
-    {
-        "LOGINDISABLED", "STARTTLS"  
+public class DepotSessionFactoryBuilder {
+    private final static String[] CAPABILITIES = new String[] {
+            "LOGINDISABLED", "STARTTLS"
     };
 
-    private final static String[] AUTHENTICATIONS = new String[]
-    {
-        "PLAIN", "CRAM-MD5", "DIGEST-MD5", "GSSAPI"  
+    private final static String[] AUTHENTICATIONS = new String[] {
+            "PLAIN", "CRAM-MD5", "DIGEST-MD5", "GSSAPI"
     };
-    
+
     private final Set<String> capabilities = new TreeSet<String>(Arrays.asList(CAPABILITIES)); 
     
     private final Set<String> authentications = new TreeSet<String>(Arrays.asList(AUTHENTICATIONS));
     
     private SSLContext sslContext;
 
-    public DepotSessionFactoryBuilder()
-    {
-        try
-        {
+    public DepotSessionFactoryBuilder() {
+        try {
             sslContext = SSLContext.getInstance("TLS");
-        }
-        catch (NoSuchAlgorithmException e)
-        {
+        } catch (NoSuchAlgorithmException e) {
         }
     }
-    
+
     public Set<String> getCapabilities()
     {
         return Collections.unmodifiableSet(capabilities);
     }
     
-    public void addCapabilities(String capability)
-    {
+    public void addCapabilities(String capability) {
         capabilities.add(capability);
     }
-    
-    public boolean removeCapabilities(String capability)
-    {
+
+    public boolean removeCapabilities(String capability) {
         return capabilities.remove(capability);
     }
-    
-    public Set<String> getAuthentications()
-    {
+
+    public Set<String> getAuthentications() {
         return Collections.unmodifiableSet(authentications);
     }
-    
-    public void addAuthentication(String authentiation)
-    {
+
+    public void addAuthentication(String authentiation) {
         authentications.add(authentiation);
     }
     
-    public boolean removeAuthentication(String authentiation)
-    {
+    public boolean removeAuthentication(String authentiation) {
         return authentications.remove(authentiation);
     }
-    
-    public SSLContext getSslContext()
-    {
+
+    public SSLContext getSslContext() {
         return sslContext;
     }
-    
-    public void setSslContext(SSLContext sslContext)
-    {
+
+    public void setSslContext(SSLContext sslContext) {
         this.sslContext = sslContext;
     }
-    
-    public DepotSessionFactory newDepotSessionFactory()
-    {
+
+    public DepotSessionFactory newDepotSessionFactory() {
         Map<String, Command> commands = new HashMap<String, Command>();
 
         commands.put("CAPABILITY", new Capability(Arrays.asList(CAPABILITIES), Arrays.asList(AUTHENTICATIONS)));

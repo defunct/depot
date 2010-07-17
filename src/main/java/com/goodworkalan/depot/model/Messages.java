@@ -1,5 +1,4 @@
 package com.goodworkalan.depot.model;
 
-public class Messages
-{
+public class Messages {
 }

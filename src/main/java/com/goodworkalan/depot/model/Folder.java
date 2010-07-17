@@ -1,6 +1,5 @@
 package com.goodworkalan.depot.model;
 
-public interface Folder
-{
+public interface Folder {
 
 }

@@ -28,11 +28,10 @@ import javax.net.ssl.SSLSession;
  * <p>
  * FIXME Keeping this around for posterity. Delete when you get a chance.
  */
-class SslHandshake extends Interpreter
-{
-    /** An empty buffer to wrap.  */
+class SslHandshake extends Interpreter {
+    /** An empty buffer to wrap. */
     private final static ByteBuffer BLANK = ByteBuffer.allocate(0);
-    
+
     /** The command code sent with the StartTLS command. */
     private final String code;
 
@@ -48,19 +47,20 @@ class SslHandshake extends Interpreter
     /**
      * Create an SSL handshake interperter with the given command tag from the
      * StartTLS command that uses the given SSL engine to encrypt this socket.
-     *
-     * @param code The StartTLS command tag.
-     * @param sslEngine The ssl engine.
+     * 
+     * @param code
+     *            The StartTLS command tag.
+     * @param sslEngine
+     *            The ssl engine.
      */
-    public SslHandshake(String code, SSLEngine sslEngine)
-    {
+    public SslHandshake(String code, SSLEngine sslEngine) {
         SSLSession session = sslEngine.getSession();
         this.code = code;
         this.sslEngine = sslEngine;
         this.incoming = ByteBuffer.allocate(session.getPacketBufferSize());
         this.incoming.limit(0);
     }
-    
+
     /**
      * Read SSL encrypted data from the data buffer and unwraps zero length
      * application data buffers from the client. SSL is able to handshake while
@@ -85,31 +85,24 @@ class SslHandshake extends Interpreter
      * @return True if there is enough data availble to execute the interpreter.
      */
     @Override
-    public boolean read(ByteBuffer data) throws Bad
-    {
+    public boolean read(ByteBuffer data) throws Bad {
         SSLSession session = sslEngine.getSession();
-        
+
         ByteBuffer destination = ByteBuffer.allocate(session.getApplicationBufferSize());
-        try
-        {
+        try {
             int dataLimit = data.limit();
             SSLEngineResult.HandshakeStatus handShakeStatus;
             SSLEngineResult.Status status = OK;
-            do
-            {
+            do {
                 int incomingRemaining = incoming.remaining();
 
                 incoming.compact();
 
-                if (incomingRemaining < incoming.capacity() && dataLimit - data.position() != 0)
-                {
+                if (incomingRemaining < incoming.capacity() && dataLimit - data.position() != 0) {
                     int overflow = (dataLimit - data.position()) - incoming.remaining();
-                    if (overflow > 0)
-                    {
+                    if (overflow > 0) {
                         data.limit(data.position() + incoming.remaining());
-                    }
-                    else
-                    {
+                    } else {
                         data.limit(dataLimit);
                     }
                     incomingRemaining += data.remaining();
@@ -119,16 +112,14 @@ class SslHandshake extends Interpreter
                 incoming.flip();
                 
                 handShakeStatus = sslEngine.getHandshakeStatus();
-                switch (handShakeStatus)
-                {
+                switch (handShakeStatus) {
                 case NOT_HANDSHAKING:
                     break;
                 case FINISHED:
                     break;
                 case NEED_TASK:
                     Runnable runnable = null;
-                    while ((runnable = sslEngine.getDelegatedTask()) != null)
-                    {
+                    while ((runnable = sslEngine.getDelegatedTask()) != null) {
                         runnable.run();
                     }
                     break;
@@ -146,11 +137,9 @@ class SslHandshake extends Interpreter
                 && (handShakeStatus == NEED_UNWRAP || handShakeStatus == NEED_TASK));
             finished = handShakeStatus == FINISHED;
             return handShakeStatus != NEED_UNWRAP;
-        }
-        catch (SSLException e)
-        {
+        } catch (SSLException e) {
             throw new Bad("*", "Unable to get going here");
-        }        
+        }    
     }
     
     /**
@@ -177,19 +166,14 @@ class SslHandshake extends Interpreter
      * @param session The response.
      */
     @Override
-    public void execute(DepotSession session, Response response) throws Bad
-    {
-        if (finished)
-        {
-            try
-            {
+    public void execute(DepotSession session, Response response) throws Bad {
+        if (finished) {
+            try {
                 setNextInterpreter(this);
                 SSLEngineResult.HandshakeStatus handShakeStatus;
-                do
-                {
+                do {
                     handShakeStatus = sslEngine.getHandshakeStatus();
-                    switch (handShakeStatus)
-                    {
+                    switch (handShakeStatus) {
                     case NOT_HANDSHAKING:
                         sslEngine.beginHandshake();
                         response.ok(code, "Begin TLS negotiation now");
@@ -203,8 +187,7 @@ class SslHandshake extends Interpreter
                         break;
                     case NEED_TASK:
                         Runnable runnable = null;
-                        while ((runnable = sslEngine.getDelegatedTask()) != null)
-                        {
+                        while ((runnable = sslEngine.getDelegatedTask()) != null) {
                             runnable.run();
                         }
                         break;
@@ -212,8 +195,7 @@ class SslHandshake extends Interpreter
                         ByteBuffer packet = ByteBuffer.allocate(sslEngine.getSession().getPacketBufferSize());
                         SSLEngineResult result = sslEngine.wrap(BLANK, packet);
                         handShakeStatus = result.getHandshakeStatus();
-                        switch (result.getStatus())
-                        {
+                        switch (result.getStatus()) {
                         case OK:
                             packet.flip();
                             response.send(packet);
@@ -224,9 +206,7 @@ class SslHandshake extends Interpreter
                         break;
                     }
                 } while (handShakeStatus == NOT_HANDSHAKING || handShakeStatus == NEED_WRAP || handShakeStatus == NEED_TASK);
-            }
-            catch (SSLException e)
-            {
+            } catch (SSLException e) {
                 e.printStackTrace();
                 setNextInterpreter(session.newCommandInterpreter());
                 response.bad("*", "Unable to get going here");

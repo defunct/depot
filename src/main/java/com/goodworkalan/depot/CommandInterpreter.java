@@ -4,25 +4,21 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandInterpreter extends LineInterpreter
-{
+public class CommandInterpreter extends LineInterpreter {
     private final static Pattern isCommand = Pattern.compile("([^ )({%*\"\\\\\\]]+)\\s+(\\w+)(.*)$");
     
     private final Map<String, Command> commands;
     
     private CommandExecutor commandExecutor;
 
-    public CommandInterpreter(Map<String, Command> commands)
-    {
+    public CommandInterpreter(Map<String, Command> commands) {
         this.commands = commands;
     }
-    
+
     @Override
-    public void execute(DepotSession session, Response response) throws Bad
-    {
+    public void execute(DepotSession session, Response response) throws Bad {
         Matcher matcher = isCommand.matcher(getLine());
-        if (!matcher.lookingAt())
-        {
+        if (!matcher.lookingAt()) {
             throw new Bad("*", "Malformed command");
         }
         String code = matcher.group(1);
@@ -33,8 +29,7 @@ public class CommandInterpreter extends LineInterpreter
     }
     
     @Override
-    public Interpreter nextInterpreter()
-    {
+    public Interpreter nextInterpreter() {
         return commandExecutor.nextInterpreter();
     }
 }

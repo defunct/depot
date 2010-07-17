@@ -1,7 +1,6 @@
 package com.goodworkalan.depot;
 
-public class Bad extends Exception
-{
+public class Bad extends Exception {
     /** The serial version id. */
     private static final long serialVersionUID = 1L;
 
@@ -11,8 +10,7 @@ public class Bad extends Exception
      * @param message
      *            The message.
      */
-    public Bad(String code, String message)
-    {
+    public Bad(String code, String message) {
         super(code + " BAD " + message + "\r\n");
     }
 }
