@@ -17,15 +17,10 @@ import org.testng.annotations.Test;
 
 import com.goodworkalan.manifold.Manifold;
 
-// TODO Move to different package for black box testing.
-public class DepotServerTestCase
-{
-    private void list(Folder parent) throws MessagingException
-    {
-        for (Folder folder : parent.list())
-        {
-            if ((folder.getType() & Folder.HOLDS_FOLDERS) == Folder.HOLDS_FOLDERS)
-            {
+public class DepotServerTestCase {
+    private void list(Folder parent) throws MessagingException {
+        for (Folder folder : parent.list()) {
+            if ((folder.getType() & Folder.HOLDS_FOLDERS) == Folder.HOLDS_FOLDERS) {
                 System.out.println(folder.getFullName());
                 list(folder);
             }
@@ -33,10 +28,9 @@ public class DepotServerTestCase
     }
 
     @Test
-    public void send() throws Exception
-    {
+    public void send() throws Exception {
         System.getProperty("javax.net.ssl.trustStore", "client.jks");
-        
+
         KeyStore ks = KeyStore.getInstance("JKS");
 
         char[] passphrase = "password".toCharArray();
@@ -69,11 +63,10 @@ public class DepotServerTestCase
         System.out.println(defaultFolder.getSeparator());
        
         System.out.println(defaultFolder.getFullName());
-        if (store.isConnected())
-        {
+        if (store.isConnected()) {
             store.close();
         }
-        
+
         props = new Properties();
         props.setProperty("mail.imap.auth.plain.disable", "true");
         props.setProperty("mail.imap.sasl.enable", "true");
@@ -82,22 +75,20 @@ public class DepotServerTestCase
         session.setDebug(true);
         store = session.getStore("imap");
         store.connect("localhost", "alan", "password");
-        if (store.isConnected())
-        {
+        if (store.isConnected()) {
             store.close();
         }
-        
+
         session = Session.getInstance(props, null);
         session.setDebug(true);
         store = session.getStore("imap");
         store.connect("localhost", "alan", "password");
         manifold.shutdown();
         manifold.join();
-        if (!store.isConnected())
-        {
+        if (!store.isConnected()) {
             System.out.println("As expected.");
         }
-        
+
         props = new Properties();
         props.setProperty("mail.imap.starttls.enable", "true");
         props.setProperty("mail.imap.port", "8143");

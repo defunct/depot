@@ -19,6 +19,7 @@ public class Authenticate extends Command {
             SaslServer saslServer = Sasl.createSaslServer(auth, "imap", "localhost", null, new SaslCallbackHandler(session.getAuthenticator()));
             if (saslServer != null) {
                 response.send(Charset.forName("UTF-8").encode("+ "));
+                // FIXME Use http://java.sun.com/products/javamail/javadocs/javax/mail/internet/MimeUtility.html
                 response.sendLine(Base64.encodeBytes(saslServer.evaluateResponse(new byte[0]), Base64.DONT_BREAK_LINES));
                 return new SaslAuthentication(code, auth, saslServer);
             }

@@ -4,12 +4,9 @@ import static org.testng.Assert.assertEquals;
 
 import org.testng.annotations.Test;
 
-
-public class DepotExceptionTest
-{
+public class DepotExceptionTest {
     @Test
-    public void constructor()
-    {
+    public void constructor() {
         DepotException e = new DepotException(101);
         assertEquals(e.getCode(), 101);
     }
